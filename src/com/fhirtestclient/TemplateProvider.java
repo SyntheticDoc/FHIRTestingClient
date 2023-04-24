@@ -16,14 +16,32 @@ public class TemplateProvider {
         switch(type) {
             case "testbody":
                 result = "{TestData}";
+                break;
             case "jsontest1":
                 result = getFileContent("example_test1.json");
+                break;
             case "jsontest2":
-                LocalDateTime timestamp = LocalDateTime.now();
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
-                String firstLine = "{\"checksum\":\"0123456789\", \"timestamp\":\"" + timestamp.format(dtf) + "\"}";
-                System.out.println("Firstline: " + firstLine);
-                result = firstLine + "\n" + getFileContent("example_test1.json");
+                result = getExampleJSON(1);
+                break;
+            case "jsontest3":
+                result = getExampleJSON(2);
+                break;
+        }
+
+        return result;
+    }
+
+    private static String getExampleJSON(int example) {
+        String result = "{}";
+        LocalDateTime timestamp = LocalDateTime.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
+        String firstLine = "{\"checksum\":\"0123456789\", \"timestamp\":\"" + timestamp.format(dtf) + "\"}";
+        // System.out.println("Firstline: " + firstLine);
+
+        if(example == 2) {
+            result = firstLine + "\n" + getFileContent("example_test2.json");
+        } else {
+            result = firstLine + "\n" + getFileContent("example_test1.json");
         }
 
         return result;
