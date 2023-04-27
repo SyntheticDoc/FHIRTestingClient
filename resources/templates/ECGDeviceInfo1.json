@@ -1,0 +1,21 @@
+{
+	"id" : 0,
+	"selfID" : "device01",
+	"identifier" : "",
+	"name" : "ESP32 custom ecg device",
+	"leads" : 2,
+	"components" : [
+		{
+			"id" : 0,
+			"selfID" : "component01",
+			"identifier" : "",
+			"name" : "ESP32_ECG_ELEC_POTL_I"
+		},
+		{
+			"id" : 0,
+			"selfID" : "component02",
+			"identifier" : "",
+			"name" : "ESP32_ECG_ELEC_POTL_II"
+		}
+	]
+}
