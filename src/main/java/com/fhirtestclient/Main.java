@@ -4,13 +4,28 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        mode2();
+
+        System.out.println("Exiting program");
+    }
+
+    private static void mode2() {
+        wait(1000);
+    }
+
+    private static void mode1() {
         if(true) {
-            sendCustomSingleRequest("http://localhost:8080/data/reflect", TemplateProvider.getTemplate("fhirtest1"));
+            //sendCustomSingleRequest("http://localhost:8080/connect/registerECGDevice", TemplateProvider.getTemplate("ecgdeviceinfo1"));
+            sendCustomSingleRequest("http://localhost:8080/data/receive/esp32_custom", TemplateProvider.getTemplate("example_reduced"));
+            //sendCustomSingleRequest("http://localhost:8080/connect/connectECGDeviceToUser", TemplateProvider.getTemplate("connectdevicedata1"));
+            //TemplateProvider.saveToFile("CustomObservationTemplate.json", TemplateProvider.getTemplate("fhirtest2"));
             return;
         }
 
@@ -47,8 +62,6 @@ public class Main {
 
             System.out.println();
         }
-
-        System.out.println("Exiting program");
     }
 
     private static void sendSingleRequest(int testFile) {
@@ -100,7 +113,7 @@ public class Main {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Server response: " + response.statusCode() + " " + response.body());
+            System.out.println("Server response: " + response.statusCode() + ":\n" + response.body());
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -154,5 +167,16 @@ public class Main {
         }
 
         return result.toString();
+    }
+
+    private static void wait(int milliseconds) {
+        Instant start = Instant.now();
+        Instant now = Instant.now();
+
+        System.out.println("Waiting " + milliseconds + "ms...");
+
+        while(ChronoUnit.MILLIS.between(start, now) < milliseconds) {
+            now = Instant.now();
+        }
     }
 }

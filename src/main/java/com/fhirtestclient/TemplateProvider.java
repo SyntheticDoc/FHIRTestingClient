@@ -4,7 +4,10 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import org.hl7.fhir.r5.model.Observation;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -47,6 +50,12 @@ public class TemplateProvider {
                 break;
             case "ecgdeviceinfo1":
                 result = getFileContent("ECGDeviceInfo1.json");
+                break;
+            case "connectdevicedata1":
+                result = getFileContent("ConnectDeviceData.json");
+                break;
+            case "example_reduced":
+                result = getFileContent("example_reduced.json");
                 break;
         }
 
@@ -110,6 +119,17 @@ public class TemplateProvider {
         } catch(Exception e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+    public static void saveToFile(String fileName, String data) {
+        String path = "resources/templates/" + fileName;
+        StringBuilder result = new StringBuilder();
+
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+            writer.write(data);
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 }

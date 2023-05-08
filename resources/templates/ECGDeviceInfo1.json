@@ -4,6 +4,7 @@
 	"identifier" : "",
 	"name" : "ESP32 custom ecg device",
 	"leads" : 2,
+	"pin" : "1a2b:3c4d:5e6f",
 	"components" : [
 		{
 			"id" : 0,

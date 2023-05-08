@@ -1,0 +1,67 @@
+{
+  "resourceType": "Observation",
+  "id": "ekg",
+  "meta": {
+    "profile": [ "http://example.com/StructureDefinition/customobservation" ]
+  },
+  "extension": [ {
+    "url": "http://example.com/dontuse#checksum",
+    "valueInteger": 123456789
+  }, {
+    "url": "http://example.com/dontuse#timestamp",
+    "valueDateTime": "2023-05-03T18:54:41.496566600"
+  }, {
+    "url": "http://example.com/dontuse#generatingDeviceID",
+    "valueString": "b6555a1f924af0056f478cd9476213f0713617dc6e12494a88b12f5f707280b1"
+  } ],
+  "status": "final",
+  "category": [ {
+    "coding": [ {
+      "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+      "code": "procedure",
+      "display": "Procedure"
+    } ]
+  } ],
+  "device": {
+    "display": "ESP32 custom ecg device"
+  },
+  "component": [ {
+    "code": {
+      "coding": [ {
+        "code": "3cfa4e0f7c6b5f2ceba2708a274f35b1b3107dd13c249bd3abc73defea6e8e2e",
+        "display": "MDC_ECG_ELEC_POTL_I"
+      } ]
+    },
+    "valueSampledData": {
+      "origin": {
+        "value": 2048
+      },
+      "interval": 10,
+      "intervalUnit": "ms",
+      "factor": 1.612,
+      "lowerLimit": -3300,
+      "upperLimit": 3300,
+      "dimensions": 1,
+      "data": "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+    }
+  }, {
+    "code": {
+      "coding": [ {
+        "code": "2034cb6376b62db4fa9c5b7d0ebb6c6608f1fd4496d51959946cead2052b48c3",
+        "display": "MDC_ECG_ELEC_POTL_II"
+      } ]
+    },
+    "valueSampledData": {
+      "origin": {
+        "value": 2048
+      },
+      "interval": 10,
+      "intervalUnit": "ms",
+      "factor": 1.612,
+      "lowerLimit": -3300,
+      "upperLimit": 3300,
+      "dimensions": 1,
+      "data": "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+    }
+  } ]
+}
