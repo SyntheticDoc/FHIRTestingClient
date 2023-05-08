@@ -17,7 +17,24 @@ public class Main {
     }
 
     private static void mode2() {
-        wait(1000);
+        int waitMillisecondsBetweenRequests = 1000;
+        int numberOfMessages = 20;
+        int counter = 0;
+        DataProvider dataProvider = new DataProvider();
+        String deviceIdentifier;
+
+        // Register ecg device
+        String requestResult = sendCustomSingleRequest("http://localhost:8080/connect/registerECGDevice", TemplateProvider.getTemplate("ecgdeviceinfo1"));
+        deviceIdentifier = requestResult.replace("{", "").replace("}", "").replace(" ", "")
+                .replace("\"", "").split(":")[1];
+
+        while(counter < numberOfMessages) {
+            counter++;
+            wait(waitMillisecondsBetweenRequests);
+            String data = dataProvider.getRandomDataset();
+            String json = TemplateProvider.getTemplate("dataset_reduced", deviceIdentifier + ":" + data);
+            sendCustomSingleRequest("http://localhost:8080/data/receive/esp32_custom", json);
+        }
     }
 
     private static void mode1() {
@@ -102,7 +119,7 @@ public class Main {
         }
     }
 
-    private static void sendCustomSingleRequest(String serviceUrl, String body) {
+    private static String sendCustomSingleRequest(String serviceUrl, String body) {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -114,8 +131,10 @@ public class Main {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println("Server response: " + response.statusCode() + ":\n" + response.body());
+            return response.body();
         } catch(Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 

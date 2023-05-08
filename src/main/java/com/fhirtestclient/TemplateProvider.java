@@ -2,6 +2,7 @@ package com.fhirtestclient;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
+import org.hl7.fhir.r5.model.DateTimeType;
 import org.hl7.fhir.r5.model.Observation;
 
 import java.io.BufferedWriter;
@@ -21,6 +22,8 @@ public class TemplateProvider {
                                                         "5522557370588f56d92655cef590e8b630ba68b074167d99bbae2067422edc0a",
                                                         "bb204c866742e7484577da0f97ad5d3e910b24cd233b02ed39660f95129702d7",
                                                         "cb04b1688dd44e7bd11e4c95c9c59d289c71f88d117bfa8b6234bfcc67686d64"};
+
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
     public static String getTemplate(String type) {
         return getTemplate(type, null);
@@ -57,9 +60,80 @@ public class TemplateProvider {
             case "example_reduced":
                 result = getFileContent("example_reduced.json");
                 break;
+            case "dataset_reduced":
+                result = getReducedDataset(data);
+                break;
         }
 
         return result;
+    }
+
+    private static String getReducedDataset(String data) {
+        String[] temp = data.split(":");
+        String deviceIdentifier = temp[0];
+        String ecgData = temp[1];
+        StringBuilder result = new StringBuilder();
+        LocalDateTime timestamp = LocalDateTime.now();
+
+        temp = ecgData.split(",");
+        ecgData = "";
+
+        for(int i = 0; i < temp.length; i++) {
+            String val = String.valueOf(Double.parseDouble(temp[i]));
+
+            if(val.equals("0.0")) {
+                if(i < (temp.length - 1) && String.valueOf(Double.parseDouble(temp[i+1])).equals("0.0") || i == (temp.length - 1)) {
+                    continue;
+                } else {
+                    ecgData += String.valueOf(Double.parseDouble(temp[i]));
+
+                    if(i < (temp.length) - 1) {
+                        ecgData += " ";
+                    }
+                }
+            } else {
+                ecgData += String.valueOf(Double.parseDouble(temp[i]));
+
+                if(i < (temp.length) - 1) {
+                    ecgData += " ";
+                }
+            }
+        }
+
+        if(ecgData.endsWith(" ")) {
+            ecgData = ecgData.substring(0, ecgData.length() - 1);
+        }
+
+        String filename = "resources/templates/example_reduced.json";
+
+        try {
+            Scanner sc = new Scanner(new File(filename));
+
+            while(sc.hasNextLine()) {
+                String s = sc.nextLine();
+
+                if(!s.isBlank()) {
+                    if(s.contains("someIdentifier")) {
+                        s = s.replace("someIdentifier", deviceIdentifier);
+                    }
+
+                    if(s.contains("someTimestamp")) {
+                        s = s.replace("someTimestamp", new DateTimeType(String.valueOf(timestamp)).getValueAsString());
+                    }
+
+                    if(s.contains("someData")) {
+                        s = s.replace("someData", ecgData);
+                    }
+
+                    result.append(s).append("\n");
+                }
+            }
+
+            return result.toString();
+        } catch(Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     private static String getCustomObservationAsString(int example) {
@@ -91,7 +165,6 @@ public class TemplateProvider {
     private static String getExampleJSON(int example) {
         String result = "{}";
         LocalDateTime timestamp = LocalDateTime.now();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
         String firstLine = "{\"checksum\":\"0123456789\", \"timestamp\":\"" + timestamp.format(dtf) + "\"}";
         // System.out.println("Firstline: " + firstLine);
 
