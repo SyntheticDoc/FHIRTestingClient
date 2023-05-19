@@ -71,11 +71,16 @@ public class TemplateProvider {
     private static String getReducedDataset(String data) {
         String[] temp = data.split(":");
         String deviceIdentifier = temp[0];
-        String ecgData = temp[1];
+        String ecgData = temp[1].trim();
         StringBuilder result = new StringBuilder();
         LocalDateTime timestamp = LocalDateTime.now();
 
-        temp = ecgData.split(",");
+        if(ecgData.contains(",")) {
+            temp = ecgData.split(",");
+        } else {
+            temp = ecgData.split(" ");
+        }
+
         ecgData = "";
 
         for(int i = 0; i < temp.length; i++) {
@@ -100,9 +105,7 @@ public class TemplateProvider {
             }
         }
 
-        if(ecgData.endsWith(" ")) {
-            ecgData = ecgData.substring(0, ecgData.length() - 1);
-        }
+        ecgData = ecgData.trim();
 
         String filename = "resources/templates/example_reduced.json";
 
