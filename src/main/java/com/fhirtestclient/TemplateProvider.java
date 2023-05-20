@@ -63,6 +63,10 @@ public class TemplateProvider {
             case "dataset_reduced":
                 result = getReducedDataset(data);
                 break;
+            case "Ili_ecg_1":
+                break;
+            case "Ili_ecg_2":
+                break;
         }
 
         return result;
@@ -83,7 +87,13 @@ public class TemplateProvider {
 
         ecgData = "";
 
-        for(int i = 0; i < temp.length; i++) {
+        int start = (temp.length/2);
+        int end = (temp.length);
+
+        System.out.println("Data length: " + temp.length + ", start=" + temp[0] + ", end=" + temp[temp.length-1]);
+        int counter = 0;
+
+        for(int i = start; i < end; i++) {
             String val = String.valueOf(Double.parseDouble(temp[i]));
 
             if(val.equals("0.0")) {
@@ -91,6 +101,7 @@ public class TemplateProvider {
                     continue;
                 } else {
                     ecgData += String.valueOf(Double.parseDouble(temp[i]));
+                    counter++;
 
                     if(i < (temp.length) - 1) {
                         ecgData += " ";
@@ -98,12 +109,15 @@ public class TemplateProvider {
                 }
             } else {
                 ecgData += String.valueOf(Double.parseDouble(temp[i]));
+                counter++;
 
                 if(i < (temp.length) - 1) {
                     ecgData += " ";
                 }
             }
         }
+
+        System.out.println("Datapoints written: " + counter);
 
         ecgData = ecgData.trim();
 

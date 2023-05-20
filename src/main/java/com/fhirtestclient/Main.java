@@ -20,28 +20,49 @@ public class Main {
         //mode2();
         //mode3();
 
-        String[] messages = new String[] {
+        String[] messages1 = new String[] {
                 "registerECGDevice",
                 "dataset_reduced_1234",
                 "dataset_reduced_1234"
         };
 
-        multiMessage(1000, messages);
+        String[] messages2 = new String[] {
+                "registerUser"
+        };
+
+        String[] messages3 = new String[] {
+                "updateUser"
+        };
+
+        String[] messages4 = new String[] {
+                "getUser"
+        };
+
+        User uReg = new User("TestUser1", "TestAddress1", 123L, true, "TestPWD");
+        UserUpdate uUpd = new UserUpdate("TestUser2", "TestAddress3", 124L, false, "TestPWD2", uReg.name, uReg.password);
+
+        //multiMessage(1000, messages4, uUpd);
+        multiMessage(1000, new String[]{"registerECGDevice", "IliDat1"}, null);
 
         System.out.println("Exiting program");
     }
 
-    private static void multiMessage(int waitMilliSecondsBetweenRequests, String[] messages) {
+    private static void multiMessage(int waitMilliSecondsBetweenRequests, String[] messages, User u) {
         String deviceInfo = "Could not get deviceInfo from backend request";
 
         for(int i = 0; i < messages.length; i++) {
-            if(messages[i].equals("registerECGDevice")) {
-                deviceInfo = extractDeviceIdentifier(singleMessage(messages[i], ""));
+            if (messages[i].equals("registerECGDevice")) {
+                deviceInfo = extractDeviceIdentifier(singleMessage(messages[i], "", null));
                 System.out.println("   Received device info: " + deviceInfo);
-            } else if(messages[i].contains("dataset")) {
-                singleMessage(messages[i], deviceInfo);
+            } else if (messages[i].contains("dataset")) {
+                singleMessage(messages[i], deviceInfo, null);
+            } else if(messages[i].contains("User")) {
+                singleMessage(messages[i], "", u);
+            }  else if(messages[i].contains("IliDat1")) {
+                DataProvider dataProvider = new DataProvider();
+                singleMessage(messages[i], deviceInfo + ":" + dataProvider.getIliData(2), null);
             } else {
-                singleMessage(messages[i], "");
+                singleMessage(messages[i], "", null);
             }
 
             if(i < (messages.length - 1)) {
@@ -50,7 +71,7 @@ public class Main {
         }
     }
 
-    private static String singleMessage(String message, String optionalInfo) {
+    private static String singleMessage(String message, String optionalInfo, User u) {
         String messageTarget = "http://localhost:8080";
         String body = "No body generated";
 
@@ -82,6 +103,22 @@ public class Main {
                 messageTarget += "/connect/connectECGDeviceToUser";
                 body = TemplateProvider.getTemplate("connectdevicedata1");
                 break;
+            case "registerUser":
+                messageTarget += "/user/post-user";
+                body = u.getJSON();
+                break;
+            case "updateUser":
+                messageTarget += "/user/update-user";
+                body = u.getJSON();
+                break;
+            case "getUser":
+                messageTarget += "/user/get-user?name=" + u.name + "&password=" + u.password;
+                body = "";
+                break;
+            case "IliDat1":
+                messageTarget += "/data/receive/esp32_custom";
+                body = TemplateProvider.getTemplate("dataset_reduced", optionalInfo);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown message type " + message);
         }
@@ -94,7 +131,11 @@ public class Main {
 
         System.out.println(loggingMessage);
 
-        return sendCustomSingleRequest(messageTarget, body);
+        if(!message.equals("getUser")) {
+            return sendCustomSingleRequest(messageTarget, body);
+        } else {
+            return sendCustomSingleRequest(messageTarget, body, "get");
+        }
     }
 
     private static void mode3() {
@@ -230,10 +271,10 @@ public class Main {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(serviceUrl))
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .header("Content-Type", "application/json")
-                .build();
+                    .uri(URI.create(serviceUrl))
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/json")
+                    .build();
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -250,13 +291,29 @@ public class Main {
     }
 
     private static String sendCustomSingleRequest(String serviceUrl, String body) {
+        return sendCustomSingleRequest(serviceUrl, body, "post");
+    }
+
+    private static String sendCustomSingleRequest(String serviceUrl, String body, String type) {
         HttpClient client = HttpClient.newHttpClient();
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(serviceUrl))
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .header("Content-Type", "application/json")
-                .build();
+        HttpRequest request;
+
+        if(type.equalsIgnoreCase("post")) {
+            request = HttpRequest.newBuilder()
+                    .uri(URI.create(serviceUrl))
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/json")
+                    .build();
+        } else if(type.equalsIgnoreCase("get")) {
+            request = HttpRequest.newBuilder()
+                    .uri(URI.create(serviceUrl))
+                    .GET()
+                    .header("Content-Type", "application/json")
+                    .build();
+        } else {
+            throw new IllegalArgumentException("Unknown request type: " + type);
+        }
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
