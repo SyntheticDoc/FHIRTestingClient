@@ -87,7 +87,7 @@ public class TemplateProvider {
 
         ecgData = "";
 
-        int start = (temp.length/2);
+        int start = 0;
         int end = (temp.length);
 
         System.out.println("Data length: " + temp.length + ", start=" + temp[0] + ", end=" + temp[temp.length-1]);

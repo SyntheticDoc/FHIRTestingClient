@@ -1,6 +1,6 @@
 {
-	"userName" : "Bla",
-	"password" : "pwd",
+	"userName" : "User Userman3",
+	"password" : "pwd3",
 	"regDeviceName" : "ESP32 custom ecg device",
 	"regDevicePin" : "1a2b:3c4d:5e6f"
 }

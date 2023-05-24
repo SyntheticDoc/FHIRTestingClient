@@ -1,11 +1,25 @@
-package com.fhirtestclient;
+package com.fhirtestclient.helper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fhirtestclient.devices.ECGDevice;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@ToString
 public class User {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public Long id;
     public String name;
     public String address;
     public Long phone;
     public boolean emergency;
     public String password;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public List<ECGDevice> devices = new ArrayList<>();
 
     public User(String name, String address, Long phone, boolean emergency, String password) {
         this.name = name;
@@ -17,6 +31,7 @@ public class User {
 
     public User() {}
 
+    @JsonIgnore
     public String getJSON() {
         StringBuilder result = new StringBuilder();
 
@@ -31,6 +46,7 @@ public class User {
         return result.toString();
     }
 
+    @JsonIgnore
     public String getGetParams() {
         StringBuilder result = new StringBuilder();
 

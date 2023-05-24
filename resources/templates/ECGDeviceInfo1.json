@@ -10,13 +10,7 @@
 			"id" : 0,
 			"selfID" : "component01",
 			"identifier" : "",
-			"name" : "ESP32_ECG_ELEC_POTL_I"
-		},
-		{
-			"id" : 0,
-			"selfID" : "component02",
-			"identifier" : "",
-			"name" : "ESP32_ECG_ELEC_POTL_II"
+			"name" : "MDC_ECG_ELEC_POTL_I"
 		}
 	]
 }
