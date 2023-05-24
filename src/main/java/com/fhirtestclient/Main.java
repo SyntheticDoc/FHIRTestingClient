@@ -25,12 +25,13 @@ public class Main {
         frontendDevice.registerUser();
         frontendDevice.getUser();
 
+        User userESP32 = new User("User Userman3", "ESPStraße 32/Stiege 32/Top 32, 1404 Wien", 3223L, true, "pwd3");
+        frontendDevice.setFrontendUser(userESP32);
+
         ECGDevice ecgDevice = new ECGDevice("device01", "ESP32 custom ecg device", "1a2b:3c4d:5e6f");
         ecgDevice.addComponent(new ECGDeviceComponent("component01", "MDC_ECG_ELEC_POTL_I"));
 
         ecgDevice.registerECGDevice();
-
-        System.out.println("\nUSER PWD: " + frontendDevice.getFrontendUser() + "\n");
 
         frontendDevice.connectECGDeviceToUser(ecgDevice);
 

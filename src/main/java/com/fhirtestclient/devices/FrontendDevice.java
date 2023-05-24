@@ -26,6 +26,8 @@ public class FrontendDevice {
 
     private String lastHealthStatus;
 
+    private boolean debug = false;
+
     @JsonIgnore
     private Console c = Console.getInstance();
     @JsonIgnore
@@ -49,7 +51,10 @@ public class FrontendDevice {
             c.err(this, "Server error: " + userJson);
         } else {
             User resultUser = (User) mapper.readToObject(userJson, User.class);
-            c.out(this, "Got user from server: " + resultUser);
+
+            if(debug) {
+                c.out(this, "Got user from server: " + resultUser);
+            }
         }
     }
 
@@ -64,7 +69,11 @@ public class FrontendDevice {
             c.err(this, "Server error: " + userJson);
         } else {
             User resultUser = (User) mapper.readToObject(userJson, User.class);
-            c.out(this, "Got updated user from server: " + resultUser);
+
+            if(debug) {
+                c.out(this, "Got updated user from server: " + resultUser);
+            }
+
             frontendUser.name = resultUser.name;
             frontendUser.address = resultUser.address;
             frontendUser.phone = resultUser.phone;
@@ -88,7 +97,10 @@ public class FrontendDevice {
             c.err(this, "Server error: " + userJson);
         } else {
             User resultUser = (User) mapper.readToObject(userJson, User.class);
-            c.out(this, "Got requested user from server: " + resultUser);
+
+            if(debug) {
+                c.out(this, "Got requested user from server: " + resultUser);
+            }
         }
     }
 
@@ -101,8 +113,6 @@ public class FrontendDevice {
         connectDeviceData.setRegDeviceName(ecgDevice.getName());
         connectDeviceData.setRegDevicePin(ecgDevice.getPin());
 
-        c.debug(this, "ConnectDeviceData: " + connectDeviceData);
-
         String ident = httpNode.sendPostRequest(EndpointProvider.getConnectECGDeviceToUser(), mapper.getJson(connectDeviceData));
 
         if (ident == null || ident.isBlank()) {
@@ -113,7 +123,10 @@ public class FrontendDevice {
         } else {
             JsonNode jsonNode = mapper.readTree(ident);
             String ecgDeviceIdentifier = jsonNode.get("identifier").asText();
-            c.out(this, "Got device identifier from server: " + ecgDeviceIdentifier);
+
+            if(debug) {
+                c.out(this, "Got device identifier from server: " + ecgDeviceIdentifier);
+            }
 
             if (!ecgDeviceIdentifier.equals(ecgDevice.getIdentifier())) {
                 c.err(this, "Device identifier received does not match ecgDevice identifier (" +
@@ -141,8 +154,12 @@ public class FrontendDevice {
             c.err(this, "Server error: " + result);
         } else {
             JsonNode jsonNode = mapper.readTree(result);
-            String status = jsonNode.get("ecgstate").asText();
-            c.out(this, "Got health status from server: " + status);
+            String status = jsonNode.get("lastAnalysisResult").get("ecgstate").asText();
+
+            if(debug) {
+                c.out(this, "Got health status from server: " + status);
+            }
+
             lastHealthStatus = status;
         }
     }
@@ -170,7 +187,9 @@ public class FrontendDevice {
         } else if(datasets.contains("\"error\"")) {
             c.err(this, "Server error: " + datasets);
         } else {
-            c.out(this, "Got datasets from server: " + datasets);
+            if(debug) {
+                c.out(this, "Got datasets from server: " + datasets);
+            }
         }
     }
 
