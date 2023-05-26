@@ -18,6 +18,29 @@ public class Main {
 
         // test2();
         test1();
+        wait(2000);
+        test3();
+    }
+
+    public static void test3() {
+        ECGDevice ecgDevice = new ECGDevice("device01", "ESP32 custom ecg device", "1a2b:3c4d:5e6f");
+        ecgDevice.addComponent(new ECGDeviceComponent("component01", "MDC_ECG_ELEC_POTL_I"));
+
+        ecgDevice.registerECGDevice();
+
+        ecgDevice.loadDataToComponent(0, "0.0 0.0 0.0 0.0");
+
+        ecgDevice.sendCurrentData();
+
+        wait(1000);
+
+        ecgDevice.sendCurrentData();
+
+        wait(1000);
+
+        ecgDevice.sendCurrentData();
+
+        wait(1000);
     }
 
     public static void test2() {
@@ -48,14 +71,22 @@ public class Main {
         User userESP32 = dataContainer.userman3;
         frontendDevice.setFrontendUser(userESP32);
 
-        ECGDevice ecgDevice = new ECGDevice("device01", "ESP32 custom ecg device1", "1a2b:3c4d:5e6f");
+        ECGDevice ecgDevice = new ECGDevice("device01", "ESP32 custom ecg device", "1a2b:3c4d:5e6f");
         ecgDevice.addComponent(new ECGDeviceComponent("component01", "MDC_ECG_ELEC_POTL_I"));
 
         ecgDevice.registerECGDevice();
 
         frontendDevice.connectECGDeviceToUser(ecgDevice);
 
-        ecgDevice.loadDataToComponent(0, "1.0 2.0 3.0 4.0");
+        ecgDevice.loadDataToComponent(0, "0.0 0.0 0.0 0.0");
+
+        ecgDevice.sendCurrentData();
+
+        wait(1000);
+
+        ecgDevice.sendCurrentData();
+
+        wait(1000);
 
         ecgDevice.sendCurrentData();
 

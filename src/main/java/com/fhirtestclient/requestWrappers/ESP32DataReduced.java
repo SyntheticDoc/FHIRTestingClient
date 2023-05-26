@@ -1,8 +1,10 @@
 package com.fhirtestclient.requestWrappers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor
 @Getter
@@ -13,6 +15,9 @@ public class ESP32DataReduced {
     private String timestamp;
     private String data;
     private boolean leadsOff;
+
+    @JsonIgnore
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
     public ESP32DataReduced(String identifier, String data) {
         this.identifier = identifier;
