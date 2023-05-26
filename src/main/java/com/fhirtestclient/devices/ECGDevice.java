@@ -63,8 +63,9 @@ public class ECGDevice {
     public void sendCurrentData() {
         c.out(this, "Sending current component data to " + EndpointProvider.getReceiveJson_fromCustomEsp32() + "...");
 
-        if(name.equals("ESP32 custom ecg device")) {
+        if(name.contains("ESP32 custom ecg device")) {
             ESP32DataReduced dat = new ESP32DataReduced(identifier, components.get(0).getData());
+            c.out(this, "ESP32 data:\n" + mapper.getJson(dat) + "\n");
             httpNode.sendPostRequest(EndpointProvider.getReceiveJson_fromCustomEsp32(), mapper.getJson(dat));
         } else {
             httpNode.sendPostRequest(EndpointProvider.getReceiveJson_fromCustomEsp32(), mapper.getJson(this));
