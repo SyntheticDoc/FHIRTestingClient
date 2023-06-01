@@ -14,6 +14,7 @@ public class ESP32DataReduced {
     private String identifier;
     private String timestamp;
     private String data;
+    private int sampling;
     private boolean leadsOff;
 
     @JsonIgnore
@@ -22,6 +23,7 @@ public class ESP32DataReduced {
     public ESP32DataReduced(String identifier, String data) {
         this.identifier = identifier;
         this.data = data;
+        this.sampling = 500;
         leadsOff = false;
         timestamp = LocalDateTime.now().toString();
     }

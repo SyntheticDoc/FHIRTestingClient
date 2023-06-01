@@ -1,7 +1,9 @@
 package com.fhirtestclient;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -81,5 +83,82 @@ public class DataProvider {
         }
 
         System.out.println("DataProvider: " + counter + " datasets read");
+    }
+
+    public String getDataset_ID(int num) {
+        String targetFile = foldername + "/id_" + num + "_1.txt";
+
+        try(Scanner sc = new Scanner(new File(targetFile))) {
+            while(sc.hasNextLine()) {
+                String s = sc.nextLine();
+                if(!s.isBlank()) {
+                    return s.replace(",", " ");
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+    public String getMimicDat(String filenum) {
+        String sourceFile = foldername + "/mimic/mimic_perform_af_csv/mimic_" + filenum + "_data.txt";
+
+        try(Scanner sc = new Scanner(new File(sourceFile))) {
+            while(sc.hasNextLine()) {
+                String s = sc.nextLine();
+
+                if(!s.isBlank()) {
+                    return s;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void processMimicDat(String filenum) {
+        String sourceFile = foldername + "/mimic/mimic_perform_af_csv/mimic_perform_af_" + filenum + "_data.csv";
+        boolean isFirstLine = true;
+        ArrayList<String> data = new ArrayList<>();
+
+        try(Scanner sc = new Scanner(new File(sourceFile))) {
+            while(sc.hasNextLine()) {
+                String s = sc.nextLine();
+
+                if(isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                if(!s.isBlank()) {
+                    data.add(s.split(",")[2]);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String targetFile = foldername + "/mimic/mimic_perform_af_csv/mimic_" + filenum + "_data.txt";
+
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile))) {
+            StringBuilder fileData = new StringBuilder();
+
+            for(int i = 0; i < data.size(); i++) {
+                fileData.append(data.get(i));
+
+                if(i < (data.size() - 1)) {
+                    fileData.append(" ");
+                }
+            }
+
+            writer.write(fileData.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
